@@ -5,6 +5,6 @@ Creating an Application using Java - OOP & Graphics
 
 ##Group 2 - Members
 
--Bayquen, Howard
--Carlos, Atthaleen
--Carunungan, Justine
+  *Bayquen, Howard
+  *Carlos, Atthaleen
+  *Carunungan, Justine
