@@ -245,13 +245,13 @@ public class GUI extends JFrame {
 		lblNewLabel_2.setBounds(38, 69, 46, 14);
 		DestinationPanel.add(lblNewLabel_2);
 		
-		JRadioButton rdbtnRegular = new JRadioButton("Regular");
-		rdbtnRegular.setBounds(219, 60, 63, 23);
-		DestinationPanel.add(rdbtnRegular);
-		
 		JLabel lblNewLabel_3 = new JLabel("Choose Airplane Type");
 		lblNewLabel_3.setBounds(292, 36, 114, 14);
 		DestinationPanel.add(lblNewLabel_3);
+		
+		JRadioButton rdbtnRegular = new JRadioButton("Regular");
+		rdbtnRegular.setBounds(219, 60, 63, 23);
+		DestinationPanel.add(rdbtnRegular);
 		
 		JRadioButton rdbtn_Business = new JRadioButton("Business");
 		rdbtn_Business.setBounds(307, 60, 67, 23);
