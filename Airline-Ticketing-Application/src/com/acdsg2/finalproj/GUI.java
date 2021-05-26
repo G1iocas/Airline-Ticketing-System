@@ -13,6 +13,7 @@ import java.awt.Image;
 
 import javax.swing.SwingConstants;
 import javax.swing.JLayeredPane;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.border.MatteBorder;
@@ -20,6 +21,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
@@ -32,6 +34,12 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GUI extends JFrame {
 
@@ -39,7 +47,7 @@ public class GUI extends JFrame {
 			.getImage().getScaledInstance(552,143,Image.SCALE_SMOOTH);
 	private Image img_minilogo = new ImageIcon(GUI.class.getResource("/res/Logo.png"))
 			.getImage().getScaledInstance(92,24,Image.SCALE_SMOOTH);
-	private JTextField textField;
+	private JTextField textField_NumPassengers;
 	private JTable table_AirplaneAvailable;
 	private JTextField textField_1;
 	private JTextField textField_2;
@@ -157,10 +165,6 @@ public class GUI extends JFrame {
 		btnBook.setBounds(282, 226, 135, 45);
 		selectionPanel.add(btnBook);
 		
-		JButton btnAdmin = new JButton("Admin Control");
-		btnAdmin.setBounds(282, 296, 135, 45);
-		selectionPanel.add(btnAdmin);
-		
 		JLabel lblExit = new JLabel("\uF072");
 		lblExit.addMouseListener(new MouseAdapter() {
 			@Override
@@ -198,6 +202,40 @@ public class GUI extends JFrame {
 		bookingPanel.setLayout(null);
 		mainPanel.add(bookingPanel, "booking");
 		
+		//Create Destinations Objects
+				Destination[] destination = new Destination[10];
+				//Local
+				for (int i=0; i<4;i++) {
+					destination[i] = new Local();
+					String temp = ((Local) destination[i]).get_location(i);
+					String dest[] = temp.split(",");
+					destination[i].setDestination(dest[0],dest[1]);
+				}
+				//International
+				for(int i=4;i<10;i++) {
+					destination[i] = new International();
+					String temp = ((International) destination[i]).get_location(i-4);
+					String dest[] = temp.split(",");
+					destination[i].setDestination(dest[0],dest[1]);
+				}
+				
+				//Create Airplane Objects (for loops dedicated for 5 airplane per destination per type thus sum of 150)
+				AirplaneType[] airplane = new AirplaneType[150];
+				int tempNumofAirplane = 0;
+				
+				for(int i=0; i<destination.length;i++) {
+					String[] tempDest = destination[i].getDestination().split(",");
+					for (int j = 0;j<5;j++) {
+						airplane[tempNumofAirplane++] = new Regular(tempDest[0],tempDest[1],tempNumofAirplane);
+						airplane[tempNumofAirplane++] = new Private(tempDest[0],tempDest[1],tempNumofAirplane);
+						airplane[tempNumofAirplane++] = new Business(tempDest[0],tempDest[1],tempNumofAirplane);
+					}
+				}
+				
+				for(AirplaneType plane:airplane) {
+					System.out.println(plane.get_airplaneNumber()+" - "+plane.get_destination());
+				}
+		
 		JLabel lblExit_book = new JLabel("\uF072");
 		lblExit_book.addMouseListener(new MouseAdapter() {
 			@Override
@@ -229,13 +267,84 @@ public class GUI extends JFrame {
 		informationInput_panel.add(DestinationPanel, "destination");
 		DestinationPanel.setLayout(null);
 		
-		JComboBox comboBox_From = new JComboBox();
+		JComboBox comboBox_AirplaneList = new JComboBox();
+		comboBox_AirplaneList.setBounds(416, 238, 133, 22);
+		DestinationPanel.add(comboBox_AirplaneList);
+		
+		DefaultTableModel myTablemodel = new DefaultTableModel(){
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+		        return false;
+		      }
+		};
+		JScrollPane scrollPane_Table = new JScrollPane();
+		scrollPane_Table.setBounds(294, 120, 259, 94);
+		DestinationPanel.add(scrollPane_Table);
+		table_AirplaneAvailable = new JTable(myTablemodel);
+		scrollPane_Table.setViewportView(table_AirplaneAvailable);
+		table_AirplaneAvailable.getTableHeader().setReorderingAllowed(false);
+		myTablemodel.addColumn("Airplane #");
+		myTablemodel.addColumn("Available Seats");
+		table_AirplaneAvailable.setRowSelectionAllowed(false);
+		table_AirplaneAvailable.setBorder(new LineBorder(new Color(0, 0, 0)));
+		
+		JComboBox comboBox_To = new JComboBox();
+		Destination list = new Destination();
+		JComboBox comboBox_From = new JComboBox(list.listFrom);
+		comboBox_From.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		JRadioButton rdbtn_Regular = new JRadioButton("Regular");
+		JRadioButton rdbtn_Business = new JRadioButton("Business");
+		JRadioButton rdbtn_Private = new JRadioButton("Private");
+		comboBox_To.setBounds(74, 65, 127, 22);
+		DestinationPanel.add(comboBox_To);
+		
+		
+		String [] withoutManila = list.listWithoutManila;
+		comboBox_From.setSelectedIndex(-1);
+		comboBox_From.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+
+				comboBox_To.removeAllItems();
+				String temp = comboBox_From.getSelectedItem().toString();
+				switch(temp) {
+					case "Manila":
+						for (String str:withoutManila) {
+							comboBox_To.addItem(str);
+						}
+						break;
+					default:
+						comboBox_To.addItem("Manila");
+						break;
+				}
+					
+			}
+		});
+		
+		comboBox_From.setSelectedIndex(0);
 		comboBox_From.setBounds(74, 32, 127, 22);
 		DestinationPanel.add(comboBox_From);
 		
-		JComboBox comboBox_To = new JComboBox();
-		comboBox_To.setBounds(74, 65, 127, 22);
-		DestinationPanel.add(comboBox_To);
+		
+		
+		rdbtn_Regular.setBounds(219, 60, 86, 23);
+		rdbtn_Regular.setSelected(true);
+		DestinationPanel.add(rdbtn_Regular);
+		
+		
+		
+		rdbtn_Business.setBounds(307, 60, 86, 23);
+		DestinationPanel.add(rdbtn_Business);
+		
+			
+		rdbtn_Private.setBounds(395, 60, 86, 23);
+		DestinationPanel.add(rdbtn_Private);
+		
+		ButtonGroup planeRadioButton = new ButtonGroup();
+		planeRadioButton.add(rdbtn_Regular);
+		planeRadioButton.add(rdbtn_Business);
+		planeRadioButton.add(rdbtn_Private);
 		
 		JLabel lblNewLabel_1 = new JLabel("From");
 		lblNewLabel_1.setBounds(38, 36, 46, 14);
@@ -246,20 +355,10 @@ public class GUI extends JFrame {
 		DestinationPanel.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("Choose Airplane Type");
-		lblNewLabel_3.setBounds(292, 36, 114, 14);
+		lblNewLabel_3.setBounds(281, 36, 133, 14);
 		DestinationPanel.add(lblNewLabel_3);
 		
-		JRadioButton rdbtnRegular = new JRadioButton("Regular");
-		rdbtnRegular.setBounds(219, 60, 63, 23);
-		DestinationPanel.add(rdbtnRegular);
 		
-		JRadioButton rdbtn_Business = new JRadioButton("Business");
-		rdbtn_Business.setBounds(307, 60, 67, 23);
-		DestinationPanel.add(rdbtn_Business);
-		
-		JRadioButton rdbtn_Private = new JRadioButton("Private");
-		rdbtn_Private.setBounds(395, 60, 63, 23);
-		DestinationPanel.add(rdbtn_Private);
 		
 		JButton btnDestinationNext = new JButton("Confirm");
 		btnDestinationNext.setBounds(551, 321, 89, 23);
@@ -269,27 +368,22 @@ public class GUI extends JFrame {
 		lblNewLabel_4.setBounds(483, 26, 127, 29);
 		DestinationPanel.add(lblNewLabel_4);
 		
-		textField = new JTextField();
-		textField.setBounds(503, 67, 86, 20);
-		DestinationPanel.add(textField);
-		textField.setColumns(10);
+		textField_NumPassengers = new JTextField();
+		textField_NumPassengers.setBounds(503, 67, 86, 20);
+		DestinationPanel.add(textField_NumPassengers);
+		textField_NumPassengers.setColumns(10);
 		
 		JLabel lblDestinationPicture = new JLabel("Picture of destination");
 		lblDestinationPicture.setBounds(91, 195, 114, 14);
 		DestinationPanel.add(lblDestinationPicture);
 		
-		table_AirplaneAvailable = new JTable();
-		table_AirplaneAvailable.setBorder(new LineBorder(new Color(0, 0, 0), 3, true));
-		table_AirplaneAvailable.setBounds(281, 120, 321, 94);
-		DestinationPanel.add(table_AirplaneAvailable);
+		
+		
 		
 		JLabel lblNewLabel_5 = new JLabel("Choose an Airplane");
 		lblNewLabel_5.setBounds(292, 242, 114, 14);
 		DestinationPanel.add(lblNewLabel_5);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(416, 238, 133, 22);
-		DestinationPanel.add(comboBox);
 		
 		JPanel PassengerPanel = new JPanel();
 		informationInput_panel.add(PassengerPanel, "name_313588846459700");
@@ -415,5 +509,10 @@ public class GUI extends JFrame {
 		JProgressBar progressBarFillup = new JProgressBar();
 		progressBarFillup.setBounds(92, 84, 514, 14);
 		bookingPanel.add(progressBarFillup);
+		
+		
+		
 	}	
+	
+	
 }

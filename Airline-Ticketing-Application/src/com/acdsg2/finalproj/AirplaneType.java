@@ -6,6 +6,10 @@ public class AirplaneType {
 	int seats_available;
 	int max_seats;
 	int seats_reserved;
+	int airplaneNumber;
+	String destinationFrom;
+	String destinationTo;
+	
 		
 	public void set_tax(int tax) {
 		this.tax = tax;
@@ -22,6 +26,18 @@ public class AirplaneType {
 		this.seats_reserved = seats_reserved;
 	}
 	
+	public void set_destinationFrom(String destination) {
+		this.destinationFrom = destination;
+	}
+	
+	public void set_destinationTo(String destination) {
+		this.destinationTo = destination;
+	}
+	
+	public void set_airplaneNumber(int airplaneNumber){
+		this.airplaneNumber = airplaneNumber;
+	}
+	
 	public int get_tax(){
 		return this.tax;
 	}
@@ -35,34 +51,50 @@ public class AirplaneType {
 	public int get_seats_reserved() {
 		return this.seats_reserved;
 	}
+	public String get_destination() {
+		return destinationFrom + "," + destinationTo;
+	}
+	
+	public int get_airplaneNumber() {
+		return airplaneNumber;
+	}
 }
 
 class Regular extends AirplaneType{
 	
-	Regular(){
+	Regular(String to, String From, int num){
 		this.set_tax(2500);
 		this.set_seats_available(52);
 		this.set_max_seats(100);
 		this.set_seats_reserved(48);
+		this.destinationTo = to;
+		this.destinationFrom = From;
+		this.airplaneNumber = num;
 	}
 		
 }
 
 class Private extends AirplaneType{
-	Private(){
+	Private(String to, String From, int num){
 		this.set_tax(2500);
 		this.set_seats_available(52);
 		this.set_max_seats(100);
 		this.set_seats_reserved(48);
+		this.destinationTo = to;
+		this.destinationFrom = From;
+		this.airplaneNumber = num;
 	}
 	
 }
 class Business extends AirplaneType{
-	Business(){
+	Business(String to, String From, int num){
 		this.set_tax(2500);
 		this.set_seats_available(52);
 		this.set_max_seats(100);
 		this.set_seats_reserved(48);
+		this.destinationTo = to;
+		this.destinationFrom = From;
+		this.airplaneNumber = num;
 	}
 	
 }
