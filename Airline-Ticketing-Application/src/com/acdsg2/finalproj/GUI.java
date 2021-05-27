@@ -36,6 +36,7 @@ import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.ItemListener;
@@ -63,7 +64,7 @@ public class GUI extends JFrame {
 	
 	int maxIndexPassenger;
 	int currentIndexPassenger=0;
-	String tempPassengerDetails[];
+	String tempPassengerDetails[][];
 	
 	/**
 	 * Launch the application.
@@ -460,8 +461,9 @@ public class GUI extends JFrame {
 					clInformationInputPanel.next(informationInput_panel);
 					numOfPassengerObj(textField_NumPassengers);
 					System.out.println(maxIndexPassenger);
+					currentIndexPassenger = 0;
 					lblPassNum.setText(lblPassNum.getText().substring(0,16)+" "+(currentIndexPassenger+1));
-					tempPassengerDetails = new String [maxIndexPassenger];
+					tempPassengerDetails = new String [maxIndexPassenger][3];					
 				}
 			}
 		});
@@ -474,16 +476,21 @@ public class GUI extends JFrame {
 		
 		JButton btnNextPassenger = new JButton("Next Passenger");
 		JButton btnPreviousPassenger = new JButton("Prev. Passenger");
+		JCheckBox chckbxInsurance = new JCheckBox("Travel Insurance");
+		
 		btnPreviousPassenger.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (btnPreviousPassenger.isEnabled()) {
+					setPassengerDet(textField_Name,textField_Age,chckbxInsurance,currentIndexPassenger);
+					chckbxInsurance.setSelected(false);
 					currentIndexPassenger--;
 					lblPassNum.setText(lblPassNum.getText().substring(0,16)+" "+(currentIndexPassenger+1));
 					if(currentIndexPassenger==0) {					
 						btnPreviousPassenger.setEnabled(false);
 					}
 					btnNextPassenger.setEnabled(true);
+					fillPassengerDet(textField_Name,textField_Age,chckbxInsurance,currentIndexPassenger);
 				}				
 			}
 		});
@@ -492,11 +499,14 @@ public class GUI extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (btnNextPassenger.isEnabled()) {
 					btnPreviousPassenger.setEnabled(true);
+					setPassengerDet(textField_Name,textField_Age,chckbxInsurance,currentIndexPassenger);
+					chckbxInsurance.setSelected(false);
 					currentIndexPassenger++;
 					lblPassNum.setText(lblPassNum.getText().substring(0,16)+" "+(currentIndexPassenger+1));
 					if ((currentIndexPassenger+1)==(maxIndexPassenger)) {
 						btnNextPassenger.setEnabled(false);
 					}
+					fillPassengerDet(textField_Name,textField_Age,chckbxInsurance,currentIndexPassenger);
 				}						
 			}
 		});
@@ -510,6 +520,7 @@ public class GUI extends JFrame {
 				}else {
 					btnNextPassenger.setEnabled(true);
 				}
+
 			}
 		});
 		informationInput_panel.add(PassengerPanel, "PassengerPanel");
@@ -559,9 +570,9 @@ public class GUI extends JFrame {
 		PassengerPanel.add(textField_Age);
 		textField_Age.setColumns(10);
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Travel Insurance");
-		chckbxNewCheckBox.setBounds(156, 210, 130, 23);
-		PassengerPanel.add(chckbxNewCheckBox);
+		
+		chckbxInsurance.setBounds(156, 210, 130, 23);
+		PassengerPanel.add(chckbxInsurance);
 		
 		JButton btnNewButton_2 = new JButton("Confirm");
 		btnNewButton_2.setBounds(535, 310, 89, 23);
@@ -575,6 +586,10 @@ public class GUI extends JFrame {
 		btnPassengerPanelBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clInformationInputPanel.previous(informationInput_panel);
+				textField_Name.setText(null);
+				textField_Age.setText(null);
+				chckbxInsurance.setSelected(false);
+				Arrays.fill(tempPassengerDetails, null);
 			}
 		});
 		btnPassengerPanelBack.setBounds(10, 11, 201, 23);
@@ -689,8 +704,29 @@ public class GUI extends JFrame {
 
         return null;
     }
+	
 	public void numOfPassengerObj(JTextField textfield) {
 		maxIndexPassenger = Integer.parseInt(textfield.getText().toString());
+	}
+	
+	public void fillPassengerDet(JTextField name, JTextField age,JCheckBox insurance, int index) {
+		name.setText(tempPassengerDetails[index][0]);
+		age.setText(tempPassengerDetails[index][1]);
+		if(tempPassengerDetails[index][2] == null||"".equals(tempPassengerDetails[index][2])) {
+			insurance.setSelected(false);
+		}else {
+			insurance.setSelected(true);
+		}
+	}
+	
+	public void setPassengerDet(JTextField name, JTextField age,JCheckBox insurance, int index) {
+		tempPassengerDetails[index][0] = name.getText();
+		tempPassengerDetails[index][1] = age.getText();
+		if(insurance.isSelected()) {
+			tempPassengerDetails[index][2] = "1";
+		}else {
+			tempPassengerDetails[index][2] = "";
+		}
 	}
 	
 	public boolean checkInputNumPassengers(JTextField textField, JComboBox comboBox, AirplaneType[] airplane) {
