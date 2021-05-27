@@ -13,6 +13,7 @@ import java.awt.Image;
 
 import javax.swing.SwingConstants;
 import javax.swing.JLayeredPane;
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -35,11 +36,16 @@ import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import java.beans.PropertyChangeListener;
+import java.util.Enumeration;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputMethodListener;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class GUI extends JFrame {
 
@@ -261,9 +267,11 @@ public class GUI extends JFrame {
 		JPanel informationInput_panel = new JPanel();
 		informationInput_panel.setBounds(25, 121, 650, 355);
 		bookingPanel.add(informationInput_panel);
-		informationInput_panel.setLayout(new CardLayout(0, 0));
+		CardLayout clInformationInputPanel = new CardLayout(0, 0);
+		informationInput_panel.setLayout(clInformationInputPanel);
 		
 		JPanel DestinationPanel = new JPanel();
+		
 		informationInput_panel.add(DestinationPanel, "destination");
 		DestinationPanel.setLayout(null);
 		
@@ -288,41 +296,25 @@ public class GUI extends JFrame {
 		table_AirplaneAvailable.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
 		JComboBox comboBox_To = new JComboBox();
+		
+		
+		
+		
+				
 		Destination list = new Destination();
 		JComboBox comboBox_From = new JComboBox(list.listFrom);
-		comboBox_From.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		
+		
 		JRadioButton rdbtn_Regular = new JRadioButton("Regular");
 		JRadioButton rdbtn_Business = new JRadioButton("Business");
 		JRadioButton rdbtn_Private = new JRadioButton("Private");
+		ButtonGroup planeRadioButton = new ButtonGroup();
 		comboBox_To.setBounds(74, 65, 127, 22);
 		DestinationPanel.add(comboBox_To);
 		
 		
 		String [] withoutManila = list.listWithoutManila;
-		comboBox_From.setSelectedIndex(-1);
-		comboBox_From.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-
-				comboBox_To.removeAllItems();
-				String temp = comboBox_From.getSelectedItem().toString();
-				switch(temp) {
-					case "Manila":
-						for (String str:withoutManila) {
-							comboBox_To.addItem(str);
-						}
-						break;
-					default:
-						comboBox_To.addItem("Manila");
-						break;
-				}
-					
-			}
-		});
 		
-		comboBox_From.setSelectedIndex(0);
 		comboBox_From.setBounds(74, 32, 127, 22);
 		DestinationPanel.add(comboBox_From);
 		
@@ -338,13 +330,73 @@ public class GUI extends JFrame {
 		DestinationPanel.add(rdbtn_Business);
 		
 			
-		rdbtn_Private.setBounds(395, 60, 86, 23);
+		rdbtn_Private.setBounds(395, 60, 86, 23);		
 		DestinationPanel.add(rdbtn_Private);
 		
-		ButtonGroup planeRadioButton = new ButtonGroup();
+		
+		
+		
 		planeRadioButton.add(rdbtn_Regular);
 		planeRadioButton.add(rdbtn_Business);
 		planeRadioButton.add(rdbtn_Private);
+		
+		comboBox_From.setSelectedIndex(-1);
+		comboBox_From.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+
+				comboBox_To.removeAllItems();
+				String temp = comboBox_From.getSelectedItem().toString();
+				if(temp.equals("Manila")) {
+					for (String str:withoutManila) {
+						comboBox_To.addItem(str);
+					}
+					
+				}else {
+					comboBox_To.addItem("Manila");
+					System.out.println("Inserting Manila");
+					
+				}
+				fillTableCombo(myTablemodel,planeRadioButton,comboBox_From,comboBox_To,airplane,comboBox_AirplaneList);				
+			}
+		});
+		
+		comboBox_To.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				fillTableCombo(myTablemodel,planeRadioButton,comboBox_From,comboBox_To,airplane,comboBox_AirplaneList);
+			}
+				
+			
+		});
+		
+		comboBox_To.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (!(comboBox_To.getItemCount()==0)) {
+					fillTableCombo(myTablemodel,planeRadioButton,comboBox_From,comboBox_To,airplane,comboBox_AirplaneList);
+				}				
+			}
+		});
+		
+//		fillTableCombo(myTablemodel,planeRadioButton,comboBox_From,comboBox_To,airplane,comboBox_AirplaneList);
+		
+		
+		comboBox_From.setSelectedIndex(0);
+		
+		
+		rdbtn_Regular.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fillTableCombo(myTablemodel,planeRadioButton,comboBox_From,comboBox_To,airplane,comboBox_AirplaneList);
+			}
+		});
+		rdbtn_Private.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fillTableCombo(myTablemodel,planeRadioButton,comboBox_From,comboBox_To,airplane,comboBox_AirplaneList);
+			}
+		});
+		rdbtn_Business.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fillTableCombo(myTablemodel,planeRadioButton,comboBox_From,comboBox_To,airplane,comboBox_AirplaneList);
+			}
+		});
 		
 		JLabel lblNewLabel_1 = new JLabel("From");
 		lblNewLabel_1.setBounds(38, 36, 46, 14);
@@ -364,20 +416,48 @@ public class GUI extends JFrame {
 		btnDestinationNext.setBounds(551, 321, 89, 23);
 		DestinationPanel.add(btnDestinationNext);
 		
+		
 		JLabel lblNewLabel_4 = new JLabel("<html><center>Enter # of Passenger for this transaction<center><html>");
 		lblNewLabel_4.setBounds(483, 26, 127, 29);
 		DestinationPanel.add(lblNewLabel_4);
 		
 		textField_NumPassengers = new JTextField();
+		textField_NumPassengers.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if(textField_NumPassengers.getText().length()==0) {
+					if(e.getKeyChar() == KeyEvent.VK_0) {
+						e.consume();
+					}
+				}
+				if(textField_NumPassengers.getText().length()==2) {
+					e.consume();					
+				}
+				if (!(Character.isDigit(e.getKeyChar()))) {
+		               e.consume();
+		        }
+				
+			}
+		});
 		textField_NumPassengers.setBounds(503, 67, 86, 20);
 		DestinationPanel.add(textField_NumPassengers);
 		textField_NumPassengers.setColumns(10);
+		
+		
 		
 		JLabel lblDestinationPicture = new JLabel("Picture of destination");
 		lblDestinationPicture.setBounds(91, 195, 114, 14);
 		DestinationPanel.add(lblDestinationPicture);
 		
-		
+		btnDestinationNext.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				boolean numPass = checkInputNumPassengers(textField_NumPassengers,comboBox_AirplaneList,airplane);
+				if(numPass) {
+					clInformationInputPanel.next(informationInput_panel);
+				}
+			}
+		});
 		
 		
 		JLabel lblNewLabel_5 = new JLabel("Choose an Airplane");
@@ -424,6 +504,10 @@ public class GUI extends JFrame {
 		lblNewLabel_12_1.setFont(new Font("Marlett", Font.PLAIN, 33));
 		lblNewLabel_12_1.setBounds(531, 25, 39, 41);
 		PassengerPanel.add(lblNewLabel_12_1);
+		
+		JLabel lblNewLabel_13 = new JLabel("Passenger Number:");
+		lblNewLabel_13.setBounds(156, 50, 140, 14);
+		PassengerPanel.add(lblNewLabel_13);
 		
 		JPanel BreakdownPanel = new JPanel();
 		informationInput_panel.add(BreakdownPanel, "name_314668628873400");
@@ -514,5 +598,77 @@ public class GUI extends JFrame {
 		
 	}	
 	
+	public String getSelectedButtonText(ButtonGroup buttonGroup) {
+        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+
+        return null;
+    }
 	
+	public boolean checkInputNumPassengers(JTextField textField, JComboBox comboBox, AirplaneType[] airplane) {
+		int selectedPlane = Integer.parseInt(comboBox.getSelectedItem().toString());
+		
+		if(textField.getText().toString().length()==0) {
+			return false;
+		}
+		
+		int numPassengers = Integer.parseInt(textField.getText().toString());
+		
+		
+		int availableSeats = airplane[selectedPlane].get_seats_available();
+		if(availableSeats>=numPassengers) {
+			return true;
+		}else {
+			return false;
+		}
+		
+	}
+	
+	public void fillTableCombo(DefaultTableModel tmodel, ButtonGroup bg, JComboBox from, JComboBox to, AirplaneType[] airplane,JComboBox<String> selection) {
+		tmodel.getDataVector().removeAllElements();
+		selection.removeAllItems();
+		String selectedAirplane = getSelectedButtonText(bg);
+		String[] selectedDestination = {(String) from.getSelectedItem(),(String) to.getSelectedItem()};
+		for (int i=0; i<airplane.length; i++) {
+			String[] tempPlanedest = airplane[i].get_destination().split(",");
+			if(selectedDestination[0].equals(tempPlanedest[0])&&selectedDestination[1].equals(tempPlanedest[1])) {
+				switch (selectedAirplane) {
+					case "Regular":
+						if(airplane[i] instanceof Regular) {
+							System.out.println("Regular");
+							System.out.println(airplane[i].get_airplaneNumber());
+							String[] data = {String.valueOf(airplane[i].get_airplaneNumber()) , String.valueOf(airplane[i].get_seats_available()) };
+							tmodel.addRow(data);
+							selection.addItem(data[0]);
+						}
+						break;
+					case "Business":
+						if(airplane[i] instanceof Business) {
+							System.out.println("Business");
+							System.out.println(airplane[i].get_airplaneNumber());
+							String[] data = {String.valueOf(airplane[i].get_airplaneNumber()) , String.valueOf(airplane[i].get_seats_available()) };
+							tmodel.addRow(data);
+							selection.addItem(data[0]);
+						}
+						break;
+					case "Private":
+						if(airplane[i] instanceof Private) {
+							System.out.println("Private");
+							System.out.println(airplane[i].get_airplaneNumber());
+							String[] data = {String.valueOf(airplane[i].get_airplaneNumber()) , String.valueOf(airplane[i].get_seats_available()) };
+							tmodel.addRow(data);
+							selection.addItem(data[0]);
+						}
+						break;
+					
+				}
+					
+			}
+		}
+	}
 }
