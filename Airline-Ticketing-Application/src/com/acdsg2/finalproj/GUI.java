@@ -46,6 +46,8 @@ import java.awt.event.InputMethodListener;
 import java.awt.event.InputMethodEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class GUI extends JFrame {
 
@@ -55,9 +57,14 @@ public class GUI extends JFrame {
 			.getImage().getScaledInstance(92,24,Image.SCALE_SMOOTH);
 	private JTextField textField_NumPassengers;
 	private JTable table_AirplaneAvailable;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField textField_Name;
+	private JTextField textField_Age;
 	private JTextField textField_3;
+	
+	int maxIndexPassenger;
+	int currentIndexPassenger=0;
+	String tempPassengerDetails[];
+	
 	/**
 	 * Launch the application.
 	 */
@@ -296,11 +303,6 @@ public class GUI extends JFrame {
 		table_AirplaneAvailable.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
 		JComboBox comboBox_To = new JComboBox();
-		
-		
-		
-		
-				
 		Destination list = new Destination();
 		JComboBox comboBox_From = new JComboBox(list.listFrom);
 		
@@ -444,73 +446,151 @@ public class GUI extends JFrame {
 		textField_NumPassengers.setColumns(10);
 		
 		
-		
 		JLabel lblDestinationPicture = new JLabel("Picture of destination");
 		lblDestinationPicture.setBounds(91, 195, 114, 14);
 		DestinationPanel.add(lblDestinationPicture);
 		
+		
+		JLabel lblPassNum = new JLabel("Passenger Number");
 		btnDestinationNext.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				boolean numPass = checkInputNumPassengers(textField_NumPassengers,comboBox_AirplaneList,airplane);
 				if(numPass) {
 					clInformationInputPanel.next(informationInput_panel);
+					numOfPassengerObj(textField_NumPassengers);
+					System.out.println(maxIndexPassenger);
+					lblPassNum.setText(lblPassNum.getText().substring(0,16)+" "+(currentIndexPassenger+1));
+					tempPassengerDetails = new String [maxIndexPassenger];
 				}
 			}
 		});
+		
 		
 		
 		JLabel lblNewLabel_5 = new JLabel("Choose an Airplane");
 		lblNewLabel_5.setBounds(292, 242, 114, 14);
 		DestinationPanel.add(lblNewLabel_5);
 		
-		
+		JButton btnNextPassenger = new JButton("Next Passenger");
+		JButton btnPreviousPassenger = new JButton("Prev. Passenger");
+		btnPreviousPassenger.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (btnPreviousPassenger.isEnabled()) {
+					currentIndexPassenger--;
+					lblPassNum.setText(lblPassNum.getText().substring(0,16)+" "+(currentIndexPassenger+1));
+					if(currentIndexPassenger==0) {					
+						btnPreviousPassenger.setEnabled(false);
+					}
+					btnNextPassenger.setEnabled(true);
+				}				
+			}
+		});
+		btnNextPassenger.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (btnNextPassenger.isEnabled()) {
+					btnPreviousPassenger.setEnabled(true);
+					currentIndexPassenger++;
+					lblPassNum.setText(lblPassNum.getText().substring(0,16)+" "+(currentIndexPassenger+1));
+					if ((currentIndexPassenger+1)==(maxIndexPassenger)) {
+						btnNextPassenger.setEnabled(false);
+					}
+				}						
+			}
+		});
 		JPanel PassengerPanel = new JPanel();
-		informationInput_panel.add(PassengerPanel, "name_313588846459700");
+		PassengerPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				currentIndexPassenger=0;
+				if ((currentIndexPassenger+1)==(maxIndexPassenger)) {
+					btnNextPassenger.setEnabled(false);
+				}else {
+					btnNextPassenger.setEnabled(true);
+				}
+			}
+		});
+		informationInput_panel.add(PassengerPanel, "PassengerPanel");
 		PassengerPanel.setLayout(null);
+		
+		
 		
 		JLabel lblNewLabel_6 = new JLabel("Name");
 		lblNewLabel_6.setBounds(156, 86, 46, 14);
 		PassengerPanel.add(lblNewLabel_6);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(156, 116, 86, 20);
-		PassengerPanel.add(textField_1);
-		textField_1.setColumns(10);
+		textField_Name = new JTextField();
+		textField_Name.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if ((Character.isDigit(e.getKeyChar()))) {
+		               e.consume();
+		        }
+			}
+		});
+		textField_Name.setBounds(156, 111, 170, 20);
+		PassengerPanel.add(textField_Name);
+		textField_Name.setColumns(10);
 		
 		JLabel lblNewLabel_7 = new JLabel("Age");
 		lblNewLabel_7.setBounds(156, 150, 46, 14);
 		PassengerPanel.add(lblNewLabel_7);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(156, 178, 86, 20);
-		PassengerPanel.add(textField_2);
-		textField_2.setColumns(10);
+		textField_Age = new JTextField();
+		textField_Age.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if(textField_Age.getText().length()==0) {
+					if(e.getKeyChar() == KeyEvent.VK_0) {
+						e.consume();
+					}
+				}
+				if(textField_Age.getText().length()==2) {
+					e.consume();					
+				}
+				if (!(Character.isDigit(e.getKeyChar()))) {
+		               e.consume();
+		        }
+			}
+		});
+		textField_Age.setBounds(156, 170, 86, 20);
+		PassengerPanel.add(textField_Age);
+		textField_Age.setColumns(10);
 		
 		JCheckBox chckbxNewCheckBox = new JCheckBox("Travel Insurance");
-		chckbxNewCheckBox.setBounds(156, 220, 130, 23);
+		chckbxNewCheckBox.setBounds(156, 210, 130, 23);
 		PassengerPanel.add(chckbxNewCheckBox);
 		
 		JButton btnNewButton_2 = new JButton("Confirm");
-		btnNewButton_2.setBounds(531, 295, 89, 23);
+		btnNewButton_2.setBounds(535, 310, 89, 23);
 		PassengerPanel.add(btnNewButton_2);
 		
-		JLabel lblNewLabel_12 = new JLabel("\uF034");
-		lblNewLabel_12.setFont(new Font("Marlett", Font.PLAIN, 33));
-		lblNewLabel_12.setBounds(580, 25, 39, 41);
-		PassengerPanel.add(lblNewLabel_12);
 		
-		JLabel lblNewLabel_12_1 = new JLabel("\uF033");
-		lblNewLabel_12_1.setFont(new Font("Marlett", Font.PLAIN, 33));
-		lblNewLabel_12_1.setBounds(531, 25, 39, 41);
-		PassengerPanel.add(lblNewLabel_12_1);
+		lblPassNum.setBounds(69, 61, 140, 14);
+		PassengerPanel.add(lblPassNum);
 		
-		JLabel lblNewLabel_13 = new JLabel("Passenger Number:");
-		lblNewLabel_13.setBounds(156, 50, 140, 14);
-		PassengerPanel.add(lblNewLabel_13);
+		JButton btnPassengerPanelBack = new JButton("Back to Destination");
+		btnPassengerPanelBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clInformationInputPanel.previous(informationInput_panel);
+			}
+		});
+		btnPassengerPanelBack.setBounds(10, 11, 201, 23);
+		PassengerPanel.add(btnPassengerPanelBack);
+		
+		
+		btnPreviousPassenger.setEnabled(false);
+		btnPreviousPassenger.setBounds(156, 250, 130, 23);
+		PassengerPanel.add(btnPreviousPassenger);
+		
+		
+		btnNextPassenger.setBounds(156, 284, 130, 23);
+		PassengerPanel.add(btnNextPassenger);
 		
 		JPanel BreakdownPanel = new JPanel();
-		informationInput_panel.add(BreakdownPanel, "name_314668628873400");
+		informationInput_panel.add(BreakdownPanel, "Breakdown");
 		BreakdownPanel.setLayout(null);
 		
 		JLabel lblNewLabel_8 = new JLabel("Summary of Transaction");
@@ -531,7 +611,7 @@ public class GUI extends JFrame {
 		BreakdownPanel.add(btnNewButton_3);
 		
 		JPanel PaymentPanel = new JPanel();
-		informationInput_panel.add(PaymentPanel, "name_316155436885600");
+		informationInput_panel.add(PaymentPanel, "Payment");
 		PaymentPanel.setLayout(null);
 		
 		JLabel lblNewLabel_9 = new JLabel("Transaction Total:");
@@ -609,6 +689,9 @@ public class GUI extends JFrame {
 
         return null;
     }
+	public void numOfPassengerObj(JTextField textfield) {
+		maxIndexPassenger = Integer.parseInt(textfield.getText().toString());
+	}
 	
 	public boolean checkInputNumPassengers(JTextField textField, JComboBox comboBox, AirplaneType[] airplane) {
 		int selectedPlane = Integer.parseInt(comboBox.getSelectedItem().toString());

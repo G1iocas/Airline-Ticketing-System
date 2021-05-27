@@ -33,5 +33,7 @@ class Adult extends Passenger{
 	
 }
 class Senior extends Passenger{
-	
+	float discountTax;
+	float discountTotal;
+	float discountRate;
 }
