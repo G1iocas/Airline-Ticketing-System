@@ -6,8 +6,10 @@ public class Passenger {
 	int age;
 	
 	float tax;
-	int baggage_fee;
-	int insurance_fee;
+	float baggage_fee;
+	float insurance_fee;
+	float fare;
+	float total;
 	
 	public void set_name(String name) {
 		this.name = name;

@@ -453,11 +453,6 @@ public class GUI extends JFrame {
 		textField_NumPassengers.setColumns(10);
 		
 		
-		JLabel lblDestinationPicture = new JLabel("Picture of destination");
-		lblDestinationPicture.setBounds(91, 195, 114, 14);
-		DestinationPanel.add(lblDestinationPicture);
-		
-		
 		JLabel lblPassNum = new JLabel("Passenger Number");
 		btnDestinationNext.addMouseListener(new MouseAdapter() {
 			@Override
@@ -471,7 +466,7 @@ public class GUI extends JFrame {
 					lblPassNum.setText(lblPassNum.getText().substring(0,16)+" "+(currentIndexPassenger+1));
 					tempPassengerDetails = new String [maxIndexPassenger][3];					
 				}else {
-					//Joptionpane
+					//Joptionpane number of passengers
 				}
 			}
 		});
@@ -592,12 +587,19 @@ public class GUI extends JFrame {
 		btnPassengerDetailsConfirm.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				setPassengerDet(textField_Name,textField_Age,chckbxInsurance,currentIndexPassenger);
-				if(checkTempDetails()) {
-					clInformationInputPanel.next(informationInput_panel);
+				
+				if((textField_Name.getText().toString()).isBlank()||(textField_Age.getText().toString()).isBlank()) {
+					//joptionpane
+					System.out.println("Empty Textfields");
 				}else {
-					//Joptionpane
+					setPassengerDet(textField_Name,textField_Age,chckbxInsurance,currentIndexPassenger);
+					if(checkTempDetails()) {
+						clInformationInputPanel.next(informationInput_panel);
+					}else {
+						//Joptionpane
+					}
 				}
+				
 				
 			}
 		});
@@ -630,7 +632,30 @@ public class GUI extends JFrame {
 		btnNextPassenger.setBounds(156, 284, 130, 23);
 		PassengerPanel.add(btnNextPassenger);
 		
+		
+		Transaction fare = new Transaction();
+		
 		JPanel BreakdownPanel = new JPanel();
+		BreakdownPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				String destination = comboBox_From.getSelectedItem().toString()+","+comboBox_To.getSelectedItem().toString();
+				int index_destination = fare.get_indexofDestination(destination);
+				int index_selectedPlane = Integer.parseInt(comboBox_AirplaneList.getSelectedItem().toString()) - 1; 
+				int travel_fare = 0;
+				if(airplane[index_selectedPlane] instanceof Regular) {
+					travel_fare = fare.get_regularFare(index_destination);
+				}
+				if(airplane[index_selectedPlane] instanceof Business) {
+					travel_fare = fare.get_businessFare(index_destination);
+				}
+				if(airplane[index_selectedPlane] instanceof Private) {
+					travel_fare = fare.get_privateFare(index_destination);
+				}
+				
+				System.out.println(travel_fare);
+			}
+		});
 		informationInput_panel.add(BreakdownPanel, "Breakdown");
 		BreakdownPanel.setLayout(null);
 		
@@ -643,7 +668,6 @@ public class GUI extends JFrame {
 		BreakdownPanel.add(scrollPane);
 		
 		JEditorPane Breakdown_editor = new JEditorPane();
-		Breakdown_editor.setText("<HTML><b>Nyarf</b></HTML>");
 		Breakdown_editor.setContentType("text/html");
 		Breakdown_editor.setEditable(false);
 		scrollPane.setViewportView(Breakdown_editor);
@@ -795,7 +819,8 @@ public class GUI extends JFrame {
 		int numPassengers = Integer.parseInt(textField.getText().toString());
 		
 		
-		int availableSeats = airplane[selectedPlane].get_seats_available();
+		int availableSeats = airplane[selectedPlane-1].get_seats_available();
+		System.out.println(availableSeats+" "+numPassengers);
 		if(availableSeats>=numPassengers) {
 			return true;
 		}else {

@@ -7,9 +7,11 @@ public class AirplaneType {
 	int max_seats;
 	int seats_reserved;
 	int airplaneNumber;
+	int travel_insurance;
+	int baggage_fee;
+	int transaction_fee;
 	String destinationFrom;
 	String destinationTo;
-	
 		
 	public void set_tax(int tax) {
 		this.tax = tax;
@@ -38,6 +40,17 @@ public class AirplaneType {
 		this.airplaneNumber = airplaneNumber;
 	}
 	
+	public void set_travelInsurance(int travelInsurance) {
+		this.travel_insurance = travelInsurance;
+	}
+	public void set_baggagefee(int baggageFee) {
+		this.baggage_fee = baggageFee;
+	}
+	public void set_transactionfee(int transactionFee) {
+		this.transaction_fee = transactionFee;
+	}
+	
+	
 	public int get_tax(){
 		return this.tax;
 	}
@@ -58,6 +71,15 @@ public class AirplaneType {
 	public int get_airplaneNumber() {
 		return airplaneNumber;
 	}
+	public int get_travelInsurance() {
+		return travel_insurance;
+	}
+	public int get_baggagefee() {
+		return baggage_fee;
+	}
+	public int get_transactionfee() {
+		return transaction_fee;
+	}
 }
 
 class Regular extends AirplaneType{
@@ -67,6 +89,9 @@ class Regular extends AirplaneType{
 		this.set_seats_available(52);
 		this.set_max_seats(100);
 		this.set_seats_reserved(48);
+		this.set_travelInsurance(950);
+		this.set_baggagefee(950);
+		this.set_transactionfee(255);
 		this.destinationTo = to;
 		this.destinationFrom = From;
 		this.airplaneNumber = num;
@@ -80,6 +105,9 @@ class Private extends AirplaneType{
 		this.set_seats_available(14);
 		this.set_max_seats(20);
 		this.set_seats_reserved(6);
+		this.set_travelInsurance(4500);
+		this.set_baggagefee(1250);
+		this.set_transactionfee(550);
 		this.destinationTo = to;
 		this.destinationFrom = From;
 		this.airplaneNumber = num;
@@ -92,6 +120,9 @@ class Business extends AirplaneType{
 		this.set_seats_available(23);
 		this.set_max_seats(30);
 		this.set_seats_reserved(7);
+		this.set_travelInsurance(6500);
+		this.set_baggagefee(2850);
+		this.set_transactionfee(550);
 		this.destinationTo = to;
 		this.destinationFrom = From;
 		this.airplaneNumber = num;

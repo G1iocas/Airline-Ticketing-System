@@ -24,9 +24,6 @@ public class Destination {
 		return this.From +"," + this.To;
 	}
 		
-	public String get_location;
-	
-	  
 }
 
 class Local extends Destination{
@@ -39,7 +36,6 @@ class Local extends Destination{
 	public String get_location(int i) {
 		return location[i][0]+","+location[i][1];
 	}
-	
 }
 
 class International extends Destination{
@@ -54,7 +50,6 @@ class International extends Destination{
 	public String get_location(int i) {
 		return location[i][0]+","+location[i][1];
 	}
-	
 }
 
 
