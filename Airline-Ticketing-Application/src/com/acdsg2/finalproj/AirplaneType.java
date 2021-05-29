@@ -77,9 +77,9 @@ class Regular extends AirplaneType{
 class Private extends AirplaneType{
 	Private(String to, String From, int num){
 		this.set_tax(2500);
-		this.set_seats_available(52);
-		this.set_max_seats(100);
-		this.set_seats_reserved(48);
+		this.set_seats_available(14);
+		this.set_max_seats(20);
+		this.set_seats_reserved(6);
 		this.destinationTo = to;
 		this.destinationFrom = From;
 		this.airplaneNumber = num;
@@ -89,9 +89,9 @@ class Private extends AirplaneType{
 class Business extends AirplaneType{
 	Business(String to, String From, int num){
 		this.set_tax(2500);
-		this.set_seats_available(52);
-		this.set_max_seats(100);
-		this.set_seats_reserved(48);
+		this.set_seats_available(23);
+		this.set_max_seats(30);
+		this.set_seats_reserved(7);
 		this.destinationTo = to;
 		this.destinationFrom = From;
 		this.airplaneNumber = num;

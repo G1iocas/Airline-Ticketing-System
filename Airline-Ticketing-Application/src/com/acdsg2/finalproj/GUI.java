@@ -212,7 +212,15 @@ public class GUI extends JFrame {
 		lblReturnSelect.setBounds(10, 15, 36, 39);
 		selectionPanel.add(lblReturnSelect);
 		
+		CardLayout clInformationInputPanel = new CardLayout(0, 0);
+		JPanel informationInput_panel = new JPanel();
 		JPanel bookingPanel = new JPanel();
+		bookingPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				clInformationInputPanel.show(informationInput_panel, "destination");
+			}
+		});
 		bookingPanel.setLayout(null);
 		mainPanel.add(bookingPanel, "booking");
 		
@@ -272,13 +280,13 @@ public class GUI extends JFrame {
 		logo_book.setIcon(new ImageIcon(img_minilogo));
 		bookingPanel.add(logo_book);
 		
-		JPanel informationInput_panel = new JPanel();
+		
 		informationInput_panel.setBounds(25, 121, 650, 355);
-		bookingPanel.add(informationInput_panel);
-		CardLayout clInformationInputPanel = new CardLayout(0, 0);
+		bookingPanel.add(informationInput_panel);		
 		informationInput_panel.setLayout(clInformationInputPanel);
 		
 		JPanel DestinationPanel = new JPanel();
+		
 		
 		informationInput_panel.add(DestinationPanel, "destination");
 		DestinationPanel.setLayout(null);
@@ -356,8 +364,6 @@ public class GUI extends JFrame {
 					
 				}else {
 					comboBox_To.addItem("Manila");
-					System.out.println("Inserting Manila");
-					
 				}
 				fillTableCombo(myTablemodel,planeRadioButton,comboBox_From,comboBox_To,airplane,comboBox_AirplaneList);				
 			}
@@ -464,10 +470,18 @@ public class GUI extends JFrame {
 					currentIndexPassenger = 0;
 					lblPassNum.setText(lblPassNum.getText().substring(0,16)+" "+(currentIndexPassenger+1));
 					tempPassengerDetails = new String [maxIndexPassenger][3];					
+				}else {
+					//Joptionpane
 				}
 			}
 		});
 		
+		DestinationPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				textField_NumPassengers.setText("");
+			}
+		});
 		
 		
 		JLabel lblNewLabel_5 = new JLabel("Choose an Airplane");
@@ -574,9 +588,21 @@ public class GUI extends JFrame {
 		chckbxInsurance.setBounds(156, 210, 130, 23);
 		PassengerPanel.add(chckbxInsurance);
 		
-		JButton btnNewButton_2 = new JButton("Confirm");
-		btnNewButton_2.setBounds(535, 310, 89, 23);
-		PassengerPanel.add(btnNewButton_2);
+		JButton btnPassengerDetailsConfirm = new JButton("Confirm");
+		btnPassengerDetailsConfirm.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				setPassengerDet(textField_Name,textField_Age,chckbxInsurance,currentIndexPassenger);
+				if(checkTempDetails()) {
+					clInformationInputPanel.next(informationInput_panel);
+				}else {
+					//Joptionpane
+				}
+				
+			}
+		});
+		btnPassengerDetailsConfirm.setBounds(535, 310, 89, 23);
+		PassengerPanel.add(btnPassengerDetailsConfirm);
 		
 		
 		lblPassNum.setBounds(69, 61, 140, 14);
@@ -609,7 +635,7 @@ public class GUI extends JFrame {
 		BreakdownPanel.setLayout(null);
 		
 		JLabel lblNewLabel_8 = new JLabel("Summary of Transaction");
-		lblNewLabel_8.setBounds(265, 24, 123, 14);
+		lblNewLabel_8.setBounds(265, 24, 170, 14);
 		BreakdownPanel.add(lblNewLabel_8);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -617,6 +643,7 @@ public class GUI extends JFrame {
 		BreakdownPanel.add(scrollPane);
 		
 		JEditorPane Breakdown_editor = new JEditorPane();
+		Breakdown_editor.setText("<HTML><b>Nyarf</b></HTML>");
 		Breakdown_editor.setContentType("text/html");
 		Breakdown_editor.setEditable(false);
 		scrollPane.setViewportView(Breakdown_editor);
@@ -693,6 +720,34 @@ public class GUI extends JFrame {
 		
 	}	
 	
+	public boolean checkTempDetails() {
+		
+		int adultsenior=0;
+		int kids=0;
+		
+		for (int i=0; i<tempPassengerDetails.length; i++) {
+			if (tempPassengerDetails[i][0] == null ||tempPassengerDetails[i][1] == null) {
+				return false;
+			}
+			if (tempPassengerDetails[i][0].isBlank() ||tempPassengerDetails[i][1].isBlank()) {
+				return false;
+			}
+			if(Integer.parseInt(tempPassengerDetails[i][1].toString())>18) {
+				adultsenior++;
+			}else {
+				kids++;
+			}
+			
+		}
+		
+		if(adultsenior==0) {
+			return false;
+		}else {
+			return true;
+		}
+			
+	}
+	
 	public String getSelectedButtonText(ButtonGroup buttonGroup) {
         for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
@@ -723,6 +778,7 @@ public class GUI extends JFrame {
 		tempPassengerDetails[index][0] = name.getText();
 		tempPassengerDetails[index][1] = age.getText();
 		if(insurance.isSelected()) {
+			
 			tempPassengerDetails[index][2] = "1";
 		}else {
 			tempPassengerDetails[index][2] = "";
