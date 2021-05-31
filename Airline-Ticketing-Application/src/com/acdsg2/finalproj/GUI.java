@@ -60,7 +60,7 @@ public class GUI extends JFrame {
 	private JTable table_AirplaneAvailable;
 	private JTextField textField_Name;
 	private JTextField textField_Age;
-	private JTextField textField_3;
+	private JTextField textField_AmountPaid;
 	
 	int maxIndexPassenger;
 	int currentIndexPassenger=0;
@@ -239,6 +239,42 @@ public class GUI extends JFrame {
 		});
 		bookingPanel.setLayout(null);
 		mainPanel.add(bookingPanel, "booking");
+		
+		JButton btnDestinationProgress = new JButton("Destination");
+		btnDestinationProgress.setEnabled(false);
+		btnDestinationProgress.setBackground(new Color(255, 255, 255));
+		btnDestinationProgress.setForeground(new Color(0, 0, 0));
+		btnDestinationProgress.setBounds(92, 70, 110, 40);
+		bookingPanel.add(btnDestinationProgress);
+		
+		JButton btnPassengerProgress = new JButton("Passenger");
+		btnPassengerProgress.setEnabled(false);
+		btnPassengerProgress.setBackground(new Color(255, 255, 255));
+		btnPassengerProgress.setForeground(new Color(0, 0, 0));
+		btnPassengerProgress.setBounds(254, 70, 110, 40);
+		bookingPanel.add(btnPassengerProgress);
+		
+		JButton btnBreakdownProgress = new JButton("Summary");
+		btnBreakdownProgress.setEnabled(false);
+		btnBreakdownProgress.setBackground(new Color(255, 255, 255));
+		btnBreakdownProgress.setForeground(new Color(0, 0, 0));
+		btnBreakdownProgress.setBounds(416, 70, 110, 40);
+		bookingPanel.add(btnBreakdownProgress);
+		
+		JButton btnPaymentProgress = new JButton("Payment");
+		btnPaymentProgress.setEnabled(false);
+		btnPaymentProgress.setBackground(new Color(255, 255, 255));
+		btnPaymentProgress.setForeground(new Color(0, 0, 0));
+		btnPaymentProgress.setBounds(578, 70, 110, 40);
+		bookingPanel.add(btnPaymentProgress);
+		
+		JProgressBar progressBarFillup = new JProgressBar();
+		progressBarFillup.setBounds(132, 84, 514, 14);
+		bookingPanel.add(progressBarFillup);
+		progressBarFillup.setForeground(new Color(0, 0, 102));
+		
+		
+		
 		
 		//Create Destinations Objects
 				Destination[] destination = new Destination[10];
@@ -484,12 +520,7 @@ public class GUI extends JFrame {
 			}
 		});
 		
-		DestinationPanel.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent e) {
-				textField_NumPassengers.setText("");
-			}
-		});
+		
 		
 		
 		JLabel lblNewLabel_5 = new JLabel("Choose an Airplane");
@@ -537,6 +568,7 @@ public class GUI extends JFrame {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				currentIndexPassenger=0;
+				lblPassNum.setText(lblPassNum.getText().substring(0,16)+" "+(currentIndexPassenger+1));
 				btnPreviousPassenger.setEnabled(false);
 				if ((currentIndexPassenger+1)==(maxIndexPassenger)) {
 					btnNextPassenger.setEnabled(false);
@@ -544,11 +576,18 @@ public class GUI extends JFrame {
 					btnNextPassenger.setEnabled(true);
 				}
 
+				progressBarFillup.setValue(30);
+				nyarf(btnDestinationProgress, btnPassengerProgress, btnBreakdownProgress, btnPaymentProgress);
+				btnDestinationProgress.setBackground(new Color(0, 0, 102));
+				btnDestinationProgress.setForeground(new Color(0, 0, 0));
 			}
 			@Override
 			public void componentHidden(ComponentEvent e) {
 				textField_Name.setText(null);
 				textField_Age.setText(null);
+				btnPassengerProgress.setBackground(new Color(250,250,250));
+				btnPassengerProgress.setForeground(new Color(0,0,0));
+				
 			}
 		});
 		informationInput_panel.add(PassengerPanel, "PassengerPanel");
@@ -637,6 +676,8 @@ public class GUI extends JFrame {
 				textField_Age.setText(null);
 				chckbxInsurance.setSelected(false);
 				Arrays.fill(tempPassengerDetails, null);
+				btnPassengerProgress.setBackground(new Color(255, 255, 255));
+				btnPassengerProgress.setForeground(new Color(0, 0, 0));
 			}
 		});
 		btnPassengerPanelBack.setBounds(10, 11, 201, 23);
@@ -747,6 +788,8 @@ public class GUI extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				clInformationInputPanel.previous(informationInput_panel);
+				btnBreakdownProgress.setBackground(new Color(255, 255, 255));
+				btnBreakdownProgress.setForeground(new Color(0, 0, 0));
 			}
 		});
 		btnBackSummary.setBounds(0, 0, 188, 23);
@@ -767,6 +810,10 @@ public class GUI extends JFrame {
 		BreakdownPanel.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
+				progressBarFillup.setValue(60);
+				nyarf(btnDestinationProgress, btnPassengerProgress, btnBreakdownProgress, btnPaymentProgress);
+				btnPassengerProgress.setBackground(new Color(0, 0, 102));
+				btnPassengerProgress.setForeground(new Color(0,0,0));
 				String destination = comboBox_From.getSelectedItem().toString()+","+comboBox_To.getSelectedItem().toString();
 				int index_destination = fare.get_indexofDestination(destination);
 				int index_selectedPlane = Integer.parseInt(comboBox_AirplaneList.getSelectedItem().toString()) - 1; 
@@ -788,41 +835,82 @@ public class GUI extends JFrame {
 		});
 		
 		JPanel PaymentPanel = new JPanel();
+		
 		informationInput_panel.add(PaymentPanel, "Payment");
 		PaymentPanel.setLayout(null);
 		
 		
 		JLabel lblNewLabel_9 = new JLabel("Transaction Total:");
-		lblNewLabel_9.setBounds(321, 56, 99, 14);
+		lblNewLabel_9.setBounds(321, 56, 122, 14);
 		PaymentPanel.add(lblNewLabel_9);
 		
-		JLabel lblNewLabel_10 = new JLabel("\u20B1");
-		lblNewLabel_10.setBounds(299, 98, 46, 14);
-		PaymentPanel.add(lblNewLabel_10);
+		JLabel lblGrandTotal = new JLabel("\u20B1");
+		lblGrandTotal.setHorizontalAlignment(SwingConstants.CENTER);
+		lblGrandTotal.setBounds(139, 93, 455, 14);
+		PaymentPanel.add(lblGrandTotal);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(299, 157, 144, 20);
-		PaymentPanel.add(textField_3);
-		textField_3.setColumns(10);
+		textField_AmountPaid = new JTextField();
+		textField_AmountPaid.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if(textField_AmountPaid.getText().length()==0) {
+					if(e.getKeyChar() == KeyEvent.VK_0) {
+						e.consume();
+					}
+				}
+				if(textField_AmountPaid.getText().length()==lblGrandTotal.getText().length()-2) {
+					e.consume();					
+				}
+				if (!(Character.isDigit(e.getKeyChar()))) {
+		               e.consume();
+		        }
+			}
+		});
+		textField_AmountPaid.setBounds(299, 157, 144, 20);
+		PaymentPanel.add(textField_AmountPaid);
+		textField_AmountPaid.setColumns(10);
 		
 		JLabel lblNewLabel_11 = new JLabel("Enter Amount:");
 		lblNewLabel_11.setBounds(194, 160, 91, 14);
 		PaymentPanel.add(lblNewLabel_11);
 		
-		JButton btnPrintReceipt = new JButton("Print Receipt");
+		JButton btnPrintReceipt = new JButton("Save Receipt");
+		btnPrintReceipt.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(btnPrintReceipt.isEnabled()) {
+					fare.createControlNum();					
+					fare.generate_Receipt(passengers);
+				}
+			}
+		});
 		btnPrintReceipt.setEnabled(false);
 		btnPrintReceipt.setBounds(275, 258, 191, 23);
 		PaymentPanel.add(btnPrintReceipt);
 		
 		JButton btnPay = new JButton("Pay");
+		
 		btnPay.setBounds(326, 202, 89, 23);
 		PaymentPanel.add(btnPay);
 		
 		JButton btnBackPayment = new JButton("Back to Summary");
+		btnBackPayment.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				clInformationInputPanel.previous(informationInput_panel);
+			}
+		});
 		btnBackPayment.setBounds(10, 11, 151, 23);
 		PaymentPanel.add(btnBackPayment);
 		
 		JButton btnFinishTransaction = new JButton("Finish Transaction");
+		btnFinishTransaction.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				btnFinishTransaction.setEnabled(false);
+				cl.previous(mainPanel);
+			}
+		});
 		btnFinishTransaction.setEnabled(false);
 		btnFinishTransaction.setBounds(563, 321, 169, 23);
 		PaymentPanel.add(btnFinishTransaction);
@@ -838,34 +926,85 @@ public class GUI extends JFrame {
 		lblReturnBooking.setBounds(10, 15, 36, 39);
 		bookingPanel.add(lblReturnBooking);
 		
-		JButton btnDestinationProgress = new JButton("Destination");
-		btnDestinationProgress.setEnabled(false);
-		btnDestinationProgress.setBounds(92, 70, 110, 40);
-		bookingPanel.add(btnDestinationProgress);
+		btnPrintReceipt.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				btnFinishTransaction.setEnabled(true);
+			}
+		});
 		
-		JButton btnPassengerProgress = new JButton("Passenger");
-		btnPassengerProgress.setEnabled(false);
-		btnPassengerProgress.setBounds(254, 70, 110, 40);
-		bookingPanel.add(btnPassengerProgress);
+		btnPay.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(btnPay.isEnabled()) {
+					int amountPaid = Integer.parseInt(textField_AmountPaid.getText());
+					if(amountPaid<grandTotal) {
+						//JOPtion paneerror
+						
+					}else {
+						lblReturnBooking.setVisible(false);
+						btnBackPayment.setVisible(false);
+						textField_AmountPaid.setEnabled(false);
+						btnPay.setEnabled(false);
+						btnPrintReceipt.setEnabled(true);
+						btnPaymentProgress.setBackground(new Color(0, 0, 102));
+						btnPaymentProgress.setForeground(new Color(255, 255, 255));
+						fare.set_amountPaid(amountPaid);
+					}
+				}
+			}
+		});
 		
-		JButton btnBreakdownProgress = new JButton("Summary");
-		btnBreakdownProgress.setEnabled(false);
-		btnBreakdownProgress.setBounds(416, 70, 110, 40);
-		bookingPanel.add(btnBreakdownProgress);
+		PaymentPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				progressBarFillup.setValue(100);
+				nyarf(btnDestinationProgress, btnPassengerProgress, btnBreakdownProgress, btnPaymentProgress);
+				btnBreakdownProgress.setBackground(new Color(0, 0, 102));
+				btnBreakdownProgress.setForeground(new Color(0, 0, 0));
+				
+				lblGrandTotal.setText(lblGrandTotal.getText().substring(0,1)+grandTotal);				
+			}
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				btnBreakdownProgress.setBackground(new Color(250, 250, 250));
+				btnBreakdownProgress.setForeground(new Color(0, 0, 0));
+				btnPaymentProgress.setBackground(new Color(250, 250, 250));
+				btnPaymentProgress.setForeground(new Color(0, 0, 0));
+				btnPassengerProgress.setBackground(new Color(250, 250, 250));
+				btnPassengerProgress.setForeground(new Color(0, 0, 0));				
+				lblReturnBooking.setVisible(false);
+				btnBackPayment.setVisible(false);
+				btnPay.setEnabled(true);
+				btnPrintReceipt.setEnabled(false);
+				
+			}
+		});
 		
-		JButton btnPaymentProgress = new JButton("Payment");
-		btnPaymentProgress.setEnabled(false);
-		btnPaymentProgress.setBounds(578, 70, 110, 40);
-		bookingPanel.add(btnPaymentProgress);
-		
-		JProgressBar progressBarFillup = new JProgressBar();
-		progressBarFillup.setBounds(132, 84, 514, 14);
-		bookingPanel.add(progressBarFillup);
-		
-		
+		DestinationPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				textField_NumPassengers.setText("");
+				progressBarFillup.setValue(0);
+				nyarf(btnDestinationProgress, btnPassengerProgress, btnBreakdownProgress, btnPaymentProgress);
+				btnDestinationProgress.setBackground(new Color(255, 255, 255));
+				btnDestinationProgress.setForeground(new Color(0, 0, 0));
+			}
+		});
 		
 	}	
 	
+	protected void nyarf(JButton button1, JButton button2, JButton button3, JButton button4) {
+		button1.setVisible(false);
+		button2.setVisible(false);
+		button3.setVisible(false);
+		button4.setVisible(false);
+		button1.setVisible(true);
+		button2.setVisible(true);
+		button3.setVisible(true);
+		button4.setVisible(true);
+	}
+
 	public void fillTableModels(DefaultTableModel regular, DefaultTableModel discount, DefaultTableModel total, Passenger[] passengers) {
 		regular.getDataVector().removeAllElements();
 		discount.getDataVector().removeAllElements();
