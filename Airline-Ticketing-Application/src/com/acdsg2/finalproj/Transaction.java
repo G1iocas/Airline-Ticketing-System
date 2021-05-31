@@ -81,11 +81,9 @@ public class Transaction {
 		String desktopPath = System.getProperty("user.home").replace("\\", "/") + "/Desktop";
 		desktopPath = desktopPath.replace("-", ":");
 		desktopPath = desktopPath.replace("/", "\\");
-		System.out.println(desktopPath);
 		String desktopPathWithFile = desktopPath.substring(2)+"\\MERC - "+currentControlNumber+java.time.LocalTime.now()+".txt";
 		desktopPathWithFile = desktopPathWithFile.replace(":", "-");
 		desktopPathWithFile = "C:"+desktopPathWithFile;
-		System.out.println(desktopPathWithFile);
 		try {
 		      File myObj = new File(desktopPathWithFile);
 		      if (myObj.createNewFile()) {

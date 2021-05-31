@@ -1,30 +1,22 @@
 package com.acdsg2.finalproj;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.CardLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Image;
-
 import javax.swing.SwingConstants;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.border.MatteBorder;
 import java.awt.Color;
 import java.awt.Cursor;
 import javax.swing.border.LineBorder;
-import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.border.BevelBorder;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -33,8 +25,6 @@ import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.JCheckBox;
-import javax.swing.JTextArea;
-import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
@@ -44,8 +34,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.ComponentAdapter;
@@ -931,9 +919,11 @@ public class GUI extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(btnPrintReceipt.isEnabled()) {
+					
 					fare.createControlNum();					
 					fare.generate_Receipt(passengers,airplane,comboBox_AirplaneList);
-					btnPrintReceipt.setEnabled(false);					
+					btnPrintReceipt.setEnabled(false);	
+					JOptionPane.showMessageDialog(prompt,"The Receipt was Saved on your Desktop","Alert",JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -1123,7 +1113,6 @@ public class GUI extends JFrame {
 			//2-insurance
 			String name = tempPassengerDetails[i][0].toString();
 			boolean IsInsured = checkInsuranceAvailed(tempPassengerDetails[i][2].toString());
-//			System.out.println(IsInsured);
 			int age = Integer.parseInt(tempPassengerDetails[i][1].toString());
 			float tax = airplane[selectedPlane].get_tax();
 			float baggageFee = airplane[selectedPlane].get_baggagefee();
@@ -1137,25 +1126,6 @@ public class GUI extends JFrame {
 				}
 			
 		}
-//		int child = 0;
-//		int adult = 0;
-//		int senior = 0;
-//		
-//		for(Passenger nyarf:passengers) {
-//			if(nyarf instanceof Child) {
-//				child++;
-//			}
-//			if(nyarf instanceof Adult) {
-//				adult++;
-//			}
-//			if(nyarf instanceof Senior) {
-//				senior++;
-//			}
-//			System.out.println(nyarf.get_insurance());
-//		}
-//		System.out.println("Child ="+child);
-//		System.out.println("Adult ="+adult);
-//		System.out.println("Senior ="+senior);
 	}
 	public boolean checkInsuranceAvailed(String insurance) {
 		if(insurance.isEmpty()) {
@@ -1243,7 +1213,6 @@ public class GUI extends JFrame {
 		
 		
 		int availableSeats = airplane[selectedPlane-1].get_seats_available();
-		System.out.println(availableSeats+" "+numPassengers);
 		if(availableSeats>=numPassengers) {
 			return true;
 		}else {
@@ -1263,8 +1232,6 @@ public class GUI extends JFrame {
 				switch (selectedAirplane) {
 					case "Regular":
 						if(airplane[i] instanceof Regular) {
-							System.out.println("Regular");
-							System.out.println(airplane[i].get_airplaneNumber());
 							String[] data = {String.valueOf(airplane[i].get_airplaneNumber()) , String.valueOf(airplane[i].get_seats_available()) };
 							tmodel.addRow(data);
 							selection.addItem(data[0]);
@@ -1272,8 +1239,6 @@ public class GUI extends JFrame {
 						break;
 					case "Business":
 						if(airplane[i] instanceof Business) {
-							System.out.println("Business");
-							System.out.println(airplane[i].get_airplaneNumber());
 							String[] data = {String.valueOf(airplane[i].get_airplaneNumber()) , String.valueOf(airplane[i].get_seats_available()) };
 							tmodel.addRow(data);
 							selection.addItem(data[0]);
@@ -1281,8 +1246,6 @@ public class GUI extends JFrame {
 						break;
 					case "Private":
 						if(airplane[i] instanceof Private) {
-							System.out.println("Private");
-							System.out.println(airplane[i].get_airplaneNumber());
 							String[] data = {String.valueOf(airplane[i].get_airplaneNumber()) , String.valueOf(airplane[i].get_seats_available()) };
 							tmodel.addRow(data);
 							selection.addItem(data[0]);
