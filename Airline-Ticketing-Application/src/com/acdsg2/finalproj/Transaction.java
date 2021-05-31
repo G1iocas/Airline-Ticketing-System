@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 
 public class Transaction {
 	//first [] is row
@@ -81,15 +82,15 @@ public class Transaction {
 		String desktopPath = System.getProperty("user.home").replace("\\", "/") + "/Desktop";
 		desktopPath = desktopPath.replace("-", ":");
 		desktopPath = desktopPath.replace("/", "\\");
-		String desktopPathWithFile = desktopPath.substring(2)+"\\MERC - "+currentControlNumber+java.time.LocalTime.now()+".txt";
+		String desktopPathWithFile = desktopPath.substring(2)+"\\MERC - "+currentControlNumber+" - "+java.time.LocalTime.now()+".txt";
 		desktopPathWithFile = desktopPathWithFile.replace(":", "-");
 		desktopPathWithFile = "C:"+desktopPathWithFile;
 		try {
 		      File myObj = new File(desktopPathWithFile);
 		      if (myObj.createNewFile()) {
-		        System.out.println("File created: " + myObj.getName());
+		        //do nothing
 		      } else {
-		        System.out.println("File already exists.");
+		    	  JOptionPane.showMessageDialog(null,"Sorry! There's an Error\n Please Restart the Program","Alert",JOptionPane.WARNING_MESSAGE);
 		      }
 		    } catch (IOException e) {
 		      System.out.println("An error occurred.");
