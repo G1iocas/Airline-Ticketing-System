@@ -13,6 +13,7 @@ import java.awt.Image;
 
 import javax.swing.SwingConstants;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -51,6 +52,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 public class GUI extends JFrame {
+	
+	JFrame prompt = new JFrame();
 
 	private Image img_logo = new ImageIcon(GUI.class.getResource("/res/Logo.png"))
 			.getImage().getScaledInstance(552,143,Image.SCALE_SMOOTH);
@@ -515,7 +518,13 @@ public class GUI extends JFrame {
 					lblPassNum.setText(lblPassNum.getText().substring(0,16)+" "+(currentIndexPassenger+1));
 					tempPassengerDetails = new String [maxIndexPassenger][3];					
 				}else {
-					//Joptionpane number of passengers no adults or Senior that can accomodate a child
+					if(textField_NumPassengers.getText().toString().equals("")) {
+						JOptionPane.showMessageDialog(prompt,"Sorry! You have to input number of Passenger","Alert",JOptionPane.WARNING_MESSAGE);
+					}else {
+						JOptionPane.showMessageDialog(prompt,"Sorry! You have exceeded the number of \r\n"
+								+ "passengers required","Alert",JOptionPane.WARNING_MESSAGE);
+					}
+					
 				}
 			}
 		});
@@ -647,14 +656,15 @@ public class GUI extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				
 				if((textField_Name.getText().toString()).isBlank()||(textField_Age.getText().toString()).isBlank()) {
-					//joptionpane
-					System.out.println("Empty Textfields");//PLease Input COmplete Details
+					JOptionPane.showMessageDialog(prompt,"Input Necessary Details","Alert",JOptionPane.WARNING_MESSAGE);
 				}else {
 					setPassengerDet(textField_Name,textField_Age,chckbxInsurance,currentIndexPassenger);
 					if(checkTempDetails()) {
 						clInformationInputPanel.next(informationInput_panel);
 					}else {
-						//Joptionpane Children must be accompanied by one or more senior or adults
+						JOptionPane.showMessageDialog(prompt,"Cannot travel alone and must be accompanied by at least one \r\n"
+								+ "(1) Adult and/or Senior Citizen","Alert",JOptionPane.WARNING_MESSAGE);
+						
 					}
 				}
 				
@@ -728,6 +738,7 @@ public class GUI extends JFrame {
 		myTablemodel_Total.addColumn("Baggage");
 		myTablemodel_Total.addColumn("Insurance");
 		myTablemodel_Total.addColumn("Discounts");
+		myTablemodel_Total.addColumn("Transaction");
 		myTablemodel_Total.addColumn("Total");
 		
 		DefaultTableModel myTablemodel_Regular = new DefaultTableModel(){
@@ -829,7 +840,7 @@ public class GUI extends JFrame {
 				}
 				passengers = new Passenger[maxIndexPassenger];
 				fillPassengers(passengers,index_selectedPlane, airplane, (float)travel_fare);
-				fillTableModels(myTablemodel_Regular, myTablemodel_Discounted, myTablemodel_Total, passengers);
+				fillTableModels(myTablemodel_Regular, myTablemodel_Discounted, myTablemodel_Total, passengers, airplane, comboBox_AirplaneList);
 			}
 			
 		});
@@ -942,8 +953,7 @@ public class GUI extends JFrame {
 				if(btnPay.isEnabled()) {
 					int amountPaid = Integer.parseInt(textField_AmountPaid.getText());
 					if(amountPaid<grandTotal) {
-						//JOPtion paneerror
-						
+						JOptionPane.showMessageDialog(prompt,"Invalid Amount","Alert",JOptionPane.WARNING_MESSAGE);
 					}else {
 						lblReturnBooking.setVisible(false);
 						btnBackPayment.setVisible(false);
@@ -979,7 +989,7 @@ public class GUI extends JFrame {
 				btnPassengerProgress.setBackground(new Color(250, 250, 250));
 				btnPassengerProgress.setForeground(new Color(0, 0, 0));				
 				lblReturnBooking.setVisible(false);
-				btnBackPayment.setVisible(false);
+				btnBackPayment.setVisible(true);
 				btnPay.setEnabled(true);
 				btnPrintReceipt.setEnabled(false);
 				lblReturnBooking.setVisible(true);
@@ -1012,7 +1022,7 @@ public class GUI extends JFrame {
 		button4.setVisible(true);
 	}
 
-	public void fillTableModels(DefaultTableModel regular, DefaultTableModel discount, DefaultTableModel total, Passenger[] passengers) {
+	public void fillTableModels(DefaultTableModel regular, DefaultTableModel discount, DefaultTableModel total, Passenger[] passengers,AirplaneType[] airplane, JComboBox comboBox_AirplaneList) {
 		regular.getDataVector().removeAllElements();
 		discount.getDataVector().removeAllElements();
 		total.getDataVector().removeAllElements();
@@ -1023,7 +1033,8 @@ public class GUI extends JFrame {
 		float total_insurance=0;
 		float total_Discounts=0;
 		float total_subtotal=0;
-		
+		int selectedPlane = Integer.parseInt(comboBox_AirplaneList.getSelectedItem().toString());
+		float transaction_fee = airplane[selectedPlane-1].get_transactionfee();
 		
 		for(int i=0; i<passengers.length;i++) {
 			if(passengers[i] instanceof Child||passengers[i] instanceof Adult) {
@@ -1052,9 +1063,11 @@ public class GUI extends JFrame {
 			}
 			
 		}
+		total_subtotal = total_subtotal + transaction_fee;
 		String [] numdata = {String.valueOf(total_fare),String.valueOf(total_tax),String.valueOf(total_baggage),
-				String.valueOf(total_insurance),String.valueOf(total_Discounts),String.valueOf(total_subtotal)};
+				String.valueOf(total_insurance),String.valueOf(total_Discounts), String.valueOf(transaction_fee), String.valueOf(total_subtotal)};
 		total.addRow(numdata);
+		
 		grandTotal = total_subtotal;
 	}
 	

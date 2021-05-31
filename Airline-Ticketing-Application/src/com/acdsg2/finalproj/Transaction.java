@@ -76,6 +76,7 @@ public class Transaction {
 		float total_insurance=0;
 		float total_Discounts=0;
 		float total_subtotal=0;
+		float transaction_fee = airplane[selectedPlane-1].get_transactionfee();
 		
 		String desktopPath = System.getProperty("user.home").replace("\\", "/") + "/Desktop";
 		desktopPath = desktopPath.replace("-", ":");
@@ -151,17 +152,21 @@ public class Transaction {
 				}
 				
 			}
+			
+			total_subtotal = total_subtotal + transaction_fee;
+			
 			String [] numdata = {String.valueOf(total_fare),String.valueOf(total_tax),String.valueOf(total_baggage),
-					String.valueOf(total_insurance),String.valueOf(total_Discounts),String.valueOf(total_subtotal)};
+					String.valueOf(total_insurance),String.valueOf(total_Discounts), String.valueOf(transaction_fee),String.valueOf(total_subtotal)};
 			
 			myWriter.write("\n\nTotal Fare:\t\t"+numdata[0]);
 			myWriter.write("\nTota Tax:\t\t"+numdata[1]);
 			myWriter.write("\nTotal Baggage:\t\t"+numdata[2]);
 			myWriter.write("\nTotal Insurance:\t"+numdata[3]);
 			myWriter.write("\nTotal Discount:\t\t"+numdata[4]);
-			myWriter.write("\n\nTotal Amount:\t\t"+numdata[5]);
+			myWriter.write("\nTransaction Fee:\t"+numdata[5]);
+			myWriter.write("\n\nTotal Amount:\t\t"+numdata[6]);
 			myWriter.write("\n\nAmount Paid:\t\t"+amountPaid);
-			change = amountPaid - Float.parseFloat(numdata[5]);
+			change = amountPaid - Float.parseFloat(numdata[6]);
 			myWriter.write("\n\nChange:\t\t\t"+change);
 			myWriter.write("\n\n\nTHANK YOU FOR FLYING WITH US");
 			myWriter.close();
