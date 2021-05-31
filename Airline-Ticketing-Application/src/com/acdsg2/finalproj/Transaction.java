@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.JComboBox;
+
 public class Transaction {
 	//first [] is row
 	// for 2nd []
@@ -64,9 +66,9 @@ public class Transaction {
 		this.amountPaid = amountPaid;
 	}
 	
-	public void generate_Receipt(Passenger[] passengers) {
+	public void generate_Receipt(Passenger[] passengers,AirplaneType[] airplane, JComboBox comboBox_AirplaneList) {
 		
-		
+		int selectedPlane = Integer.parseInt(comboBox_AirplaneList.getSelectedItem().toString());
 		
 		float total_fare=0;
 		float total_tax=0;
@@ -103,6 +105,8 @@ public class Transaction {
 			myWriter.write("\tLET'S FLY");
 			myWriter.write("\n\n*THIS WILL SERVE AS AN OFFICIAL RECEIPT*\n\n");
 			myWriter.write("\n\nControl Number : "+currentControlNumber+"\n\n");
+			myWriter.write("Plane Number : "+selectedPlane+"\n\n");
+			
 			for(int i=0; i<passengers.length;i++) {
 				if(passengers[i] instanceof Child||passengers[i] instanceof Adult) {
 					String[] data = {String.valueOf(i+1),passengers[i].get_name(),passengers[i].get_age(),
@@ -113,8 +117,8 @@ public class Transaction {
 					total_baggage +=passengers[i].get_baggageFee();
 					total_insurance += passengers[i].get_insurance();
 					total_subtotal += passengers[i].get_total();
-//					
-					myWriter.write("\nName:\t\t\t"+data[1]);
+					
+					myWriter.write("\n\n\nName:\t\t\t"+data[1]);
 					myWriter.write("\nAge:\t\t\t"+data[2]);
 					myWriter.write("\nFare:\t\t\t"+data[3]);
 					myWriter.write("\nTax:\t\t\t"+data[4]);
@@ -136,21 +140,21 @@ public class Transaction {
 					total_Discounts += ((Senior) passengers[i]).get_discount20percent();
 					total_subtotal += ((Senior) passengers[i]).get_totalDiscountedPrice();
 					
-					myWriter.write("\nName:\t\t\t"+data[1]);
+					myWriter.write("\n\n\nName:\t\t\t"+data[1]);
 					myWriter.write("\nAge:\t\t\t"+data[2]);
 					myWriter.write("\nFare:\t\t\t"+data[3]);
 					myWriter.write("\nTax:\t\t\t"+data[4]);
-					myWriter.write("\nBaggage:\t\t\t"+data[5]);
-					myWriter.write("\nInsurance:\t\t\t"+data[6]);
-					myWriter.write("\nDiscount:\t\t\t"+data[7]);
-					myWriter.write("\n\nSub-total:\t\t\t"+data[8]);
+					myWriter.write("\nBaggage:\t\t"+data[5]);
+					myWriter.write("\nInsurance:\t\t"+data[6]);
+					myWriter.write("\nDiscount:\t\t"+data[7]);
+					myWriter.write("\n\nSub-total:\t\t"+data[8]);
 				}
 				
 			}
 			String [] numdata = {String.valueOf(total_fare),String.valueOf(total_tax),String.valueOf(total_baggage),
 					String.valueOf(total_insurance),String.valueOf(total_Discounts),String.valueOf(total_subtotal)};
 			
-			myWriter.write("\nTotal Fare:\t\t"+numdata[0]);
+			myWriter.write("\n\nTotal Fare:\t\t"+numdata[0]);
 			myWriter.write("\nTota Tax:\t\t"+numdata[1]);
 			myWriter.write("\nTotal Baggage:\t\t"+numdata[2]);
 			myWriter.write("\nTotal Insurance:\t"+numdata[3]);
@@ -161,10 +165,14 @@ public class Transaction {
 			myWriter.write("\n\nChange:\t\t\t"+change);
 			myWriter.write("\n\n\nTHANK YOU FOR FLYING WITH US");
 			myWriter.close();
+			
+			airplane[selectedPlane-1].set_transactedPassenger(passengers.length);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 		
 	}
 	

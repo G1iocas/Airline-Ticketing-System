@@ -880,7 +880,8 @@ public class GUI extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if(btnPrintReceipt.isEnabled()) {
 					fare.createControlNum();					
-					fare.generate_Receipt(passengers);
+					fare.generate_Receipt(passengers,airplane,comboBox_AirplaneList);
+					btnPrintReceipt.setEnabled(false);					
 				}
 			}
 		});
@@ -907,8 +908,10 @@ public class GUI extends JFrame {
 		btnFinishTransaction.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				btnFinishTransaction.setEnabled(false);
-				cl.previous(mainPanel);
+				if(btnFinishTransaction.isEnabled()) {
+					btnFinishTransaction.setEnabled(false);
+					cl.previous(mainPanel);
+				}				
 			}
 		});
 		btnFinishTransaction.setEnabled(false);
@@ -963,7 +966,9 @@ public class GUI extends JFrame {
 				btnBreakdownProgress.setBackground(new Color(0, 0, 102));
 				btnBreakdownProgress.setForeground(new Color(0, 0, 0));
 				
-				lblGrandTotal.setText(lblGrandTotal.getText().substring(0,1)+grandTotal);				
+				lblGrandTotal.setText(lblGrandTotal.getText().substring(0,1)+grandTotal);		
+				textField_AmountPaid.setEnabled(true);
+				textField_AmountPaid.setText("");
 			}
 			@Override
 			public void componentHidden(ComponentEvent e) {
@@ -977,6 +982,7 @@ public class GUI extends JFrame {
 				btnBackPayment.setVisible(false);
 				btnPay.setEnabled(true);
 				btnPrintReceipt.setEnabled(false);
+				lblReturnBooking.setVisible(true);
 				
 			}
 		});
@@ -989,6 +995,7 @@ public class GUI extends JFrame {
 				nyarf(btnDestinationProgress, btnPassengerProgress, btnBreakdownProgress, btnPaymentProgress);
 				btnDestinationProgress.setBackground(new Color(255, 255, 255));
 				btnDestinationProgress.setForeground(new Color(0, 0, 0));
+				fillTableCombo(myTablemodel,planeRadioButton,comboBox_From,comboBox_To,airplane,comboBox_AirplaneList);
 			}
 		});
 		

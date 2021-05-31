@@ -49,6 +49,10 @@ public class AirplaneType {
 	public void set_transactionfee(int transactionFee) {
 		this.transaction_fee = transactionFee;
 	}
+	public void set_transactedPassenger(int numOfPassengers) {
+		this.seats_reserved += numOfPassengers;
+		this.seats_available -= numOfPassengers;
+	}
 	
 	
 	public int get_tax(){
