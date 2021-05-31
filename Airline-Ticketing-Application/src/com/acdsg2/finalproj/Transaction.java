@@ -158,7 +158,7 @@ public class Transaction {
 					String.valueOf(total_insurance),String.valueOf(total_Discounts), String.valueOf(transaction_fee),String.valueOf(total_subtotal)};
 			
 			myWriter.write("\n\nTotal Fare:\t\t"+numdata[0]);
-			myWriter.write("\nTota Tax:\t\t"+numdata[1]);
+			myWriter.write("\nTotal Tax:\t\t"+numdata[1]);
 			myWriter.write("\nTotal Baggage:\t\t"+numdata[2]);
 			myWriter.write("\nTotal Insurance:\t"+numdata[3]);
 			myWriter.write("\nTotal Discount:\t\t"+numdata[4]);
