@@ -152,7 +152,10 @@ public class GUI extends JFrame {
 		btnExit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
+				if (JOptionPane.showConfirmDialog(null, "Are you sure?", "WARNING",
+				        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				    System.exit(0);
+				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -180,6 +183,7 @@ public class GUI extends JFrame {
 		selectionPanel.add(lblNewLabel);
 		
 		JButton btnBook = new JButton("Book a Flight");
+		btnBook.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnBook.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -190,10 +194,14 @@ public class GUI extends JFrame {
 		selectionPanel.add(btnBook);
 		
 		JLabel lblExit = new JLabel("\uF072");
+		lblExit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblExit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
+				if (JOptionPane.showConfirmDialog(null, "Are you sure?", "WARNING",
+				        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				    System.exit(0);
+				}
 			}
 		});
 		lblExit.setFont(new Font("Marlett", Font.PLAIN, 25));
@@ -201,6 +209,13 @@ public class GUI extends JFrame {
 		selectionPanel.add(lblExit);
 		
 		JLabel lblMinimize = new JLabel("\uF030");
+		lblMinimize.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		lblMinimize.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				setState(JFrame.ICONIFIED);
+			}
+		});
 		lblMinimize.setFont(new Font("Marlett", Font.PLAIN, 25));
 		lblMinimize.setBounds(716, 11, 25, 30);
 		selectionPanel.add(lblMinimize);
@@ -312,10 +327,14 @@ public class GUI extends JFrame {
 				
 		
 		JLabel lblExit_book = new JLabel("\uF072");
+		lblExit_book.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblExit_book.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
+				if (JOptionPane.showConfirmDialog(null, "Are you sure?", "WARNING",
+				        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				    System.exit(0);
+				}
 			}
 		});
 		lblExit_book.setFont(new Font("Marlett", Font.PLAIN, 25));
@@ -323,6 +342,13 @@ public class GUI extends JFrame {
 		bookingPanel.add(lblExit_book);
 		
 		JLabel lblMinimize_book = new JLabel("\uF030");
+		lblMinimize_book.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				setState(JFrame.ICONIFIED);
+			}
+		});
+		lblMinimize_book.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblMinimize_book.setFont(new Font("Marlett", Font.PLAIN, 25));
 		lblMinimize_book.setBounds(730, 11, 25, 30);
 		bookingPanel.add(lblMinimize_book);
@@ -345,6 +371,7 @@ public class GUI extends JFrame {
 		DestinationPanel.setLayout(null);
 		
 		JComboBox comboBox_AirplaneList = new JComboBox();
+		comboBox_AirplaneList.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		comboBox_AirplaneList.setBounds(365, 227, 135, 22);
 		DestinationPanel.add(comboBox_AirplaneList);
 		
@@ -365,13 +392,18 @@ public class GUI extends JFrame {
 		table_AirplaneAvailable.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
 		JComboBox comboBox_To = new JComboBox();
+		comboBox_To.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		Destination list = new Destination();
 		JComboBox comboBox_From = new JComboBox(list.listFrom);
+		comboBox_From.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		
 		JRadioButton rdbtn_Regular = new JRadioButton("Regular");
+		rdbtn_Regular.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		JRadioButton rdbtn_Business = new JRadioButton("Business");
+		rdbtn_Business.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		JRadioButton rdbtn_Private = new JRadioButton("Private");
+		rdbtn_Private.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		ButtonGroup planeRadioButton = new ButtonGroup();
 		comboBox_To.setBounds(116, 65, 127, 22);
 		DestinationPanel.add(comboBox_To);
@@ -475,6 +507,7 @@ public class GUI extends JFrame {
 		
 		
 		JButton btnDestinationNext = new JButton("Confirm");
+		btnDestinationNext.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnDestinationNext.setBounds(593, 321, 89, 23);
 		DestinationPanel.add(btnDestinationNext);
 		
@@ -537,8 +570,11 @@ public class GUI extends JFrame {
 		DestinationPanel.add(lblNewLabel_5);
 		
 		JButton btnNextPassenger = new JButton("Next Passenger");
+		btnNextPassenger.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		JButton btnPreviousPassenger = new JButton("Prev. Passenger");
+		btnPreviousPassenger.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		JCheckBox chckbxInsurance = new JCheckBox("Travel Insurance");
+		chckbxInsurance.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		btnPreviousPassenger.addMouseListener(new MouseAdapter() {
 			@Override
@@ -651,6 +687,7 @@ public class GUI extends JFrame {
 		PassengerPanel.add(chckbxInsurance);
 		
 		JButton btnPassengerDetailsConfirm = new JButton("Confirm");
+		btnPassengerDetailsConfirm.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnPassengerDetailsConfirm.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -679,6 +716,7 @@ public class GUI extends JFrame {
 		PassengerPanel.add(lblPassNum);
 		
 		JButton btnPassengerPanelBack = new JButton("Back to Destination");
+		btnPassengerPanelBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnPassengerPanelBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clInformationInputPanel.previous(informationInput_panel);
@@ -785,6 +823,7 @@ public class GUI extends JFrame {
 		myTablemodel_Discounted.addColumn("Sub-Total");
 		
 		JButton btnSummaryConfirm = new JButton("Confirm");
+		btnSummaryConfirm.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnSummaryConfirm.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -795,6 +834,7 @@ public class GUI extends JFrame {
 		BreakdownPanel.add(btnSummaryConfirm);
 		
 		JButton btnBackSummary = new JButton("Back to Passenger Details");
+		btnBackSummary.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnBackSummary.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -886,6 +926,7 @@ public class GUI extends JFrame {
 		PaymentPanel.add(lblNewLabel_11);
 		
 		JButton btnPrintReceipt = new JButton("Save Receipt");
+		btnPrintReceipt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnPrintReceipt.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -901,11 +942,13 @@ public class GUI extends JFrame {
 		PaymentPanel.add(btnPrintReceipt);
 		
 		JButton btnPay = new JButton("Pay");
+		btnPay.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		btnPay.setBounds(326, 202, 89, 23);
 		PaymentPanel.add(btnPay);
 		
 		JButton btnBackPayment = new JButton("Back to Summary");
+		btnBackPayment.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnBackPayment.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -916,6 +959,7 @@ public class GUI extends JFrame {
 		PaymentPanel.add(btnBackPayment);
 		
 		JButton btnFinishTransaction = new JButton("Finish Transaction");
+		btnFinishTransaction.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnFinishTransaction.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -930,6 +974,7 @@ public class GUI extends JFrame {
 		PaymentPanel.add(btnFinishTransaction);
 		
 		JLabel lblReturnBooking = new JLabel("\uF033");
+		lblReturnBooking.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblReturnBooking.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
