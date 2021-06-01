@@ -300,7 +300,7 @@ public class GUI extends JFrame {
 				}
 				
 				//Create Airplane Objects (for loops dedicated for 5 airplane per destination per type thus sum of 150)
-				AirplaneType[] airplane = new AirplaneType[150];
+				AirlineType[] airplane = new AirlineType[150];
 				int tempNumofAirplane = 0;
 				
 				for(int i=0; i<destination.length;i++) {
@@ -1057,7 +1057,7 @@ public class GUI extends JFrame {
 		button4.setVisible(true);
 	}
 
-	public void fillTableModels(DefaultTableModel regular, DefaultTableModel discount, DefaultTableModel total, Passenger[] passengers,AirplaneType[] airplane, JComboBox comboBox_AirplaneList) {
+	public void fillTableModels(DefaultTableModel regular, DefaultTableModel discount, DefaultTableModel total, Passenger[] passengers,AirlineType[] airplane, JComboBox comboBox_AirplaneList) {
 		regular.getDataVector().removeAllElements();
 		discount.getDataVector().removeAllElements();
 		total.getDataVector().removeAllElements();
@@ -1106,7 +1106,7 @@ public class GUI extends JFrame {
 		grandTotal = total_subtotal;
 	}
 	
-	public void fillPassengers(Passenger[] passengers, int selectedPlane, AirplaneType[] airplane, float fare){
+	public void fillPassengers(Passenger[] passengers, int selectedPlane, AirlineType[] airplane, float fare){
 		for(int i=0; i<tempPassengerDetails.length;i++) {
 			//0-name
 			//1-age
@@ -1202,7 +1202,7 @@ public class GUI extends JFrame {
 		}
 	}
 	
-	public boolean checkInputNumPassengers(JTextField textField, JComboBox comboBox, AirplaneType[] airplane) {
+	public boolean checkInputNumPassengers(JTextField textField, JComboBox comboBox, AirlineType[] airplane) {
 		int selectedPlane = Integer.parseInt(comboBox.getSelectedItem().toString());
 		
 		if(textField.getText().toString().length()==0) {
@@ -1221,7 +1221,7 @@ public class GUI extends JFrame {
 		
 	}
 	
-	public void fillTableCombo(DefaultTableModel tmodel, ButtonGroup bg, JComboBox from, JComboBox to, AirplaneType[] airplane,JComboBox<String> selection) {
+	public void fillTableCombo(DefaultTableModel tmodel, ButtonGroup bg, JComboBox from, JComboBox to, AirlineType[] airplane,JComboBox<String> selection) {
 		tmodel.getDataVector().removeAllElements();
 		selection.removeAllItems();
 		String selectedAirplane = getSelectedButtonText(bg);

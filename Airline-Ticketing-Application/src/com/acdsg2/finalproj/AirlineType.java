@@ -1,6 +1,6 @@
 package com.acdsg2.finalproj;
 
-public class AirplaneType {
+public class AirlineType {
 	
 	int tax;
 	int seats_available;
@@ -86,7 +86,7 @@ public class AirplaneType {
 	}
 }
 
-class Regular extends AirplaneType{
+class Regular extends AirlineType{
 	
 	Regular(String to, String From, int num){
 		this.set_tax(2500);
@@ -103,7 +103,7 @@ class Regular extends AirplaneType{
 		
 }
 
-class Private extends AirplaneType{
+class Private extends AirlineType{
 	Private(String to, String From, int num){
 		this.set_tax(4260);
 		this.set_seats_available(14);
@@ -118,7 +118,7 @@ class Private extends AirplaneType{
 	}
 	
 }
-class Business extends AirplaneType{
+class Business extends AirlineType{
 	Business(String to, String From, int num){
 		this.set_tax(5700);
 		this.set_seats_available(23);

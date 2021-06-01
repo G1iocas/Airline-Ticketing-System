@@ -67,7 +67,7 @@ public class Transaction {
 		this.amountPaid = amountPaid;
 	}
 	
-	public void generate_Receipt(Passenger[] passengers,AirplaneType[] airplane, JComboBox comboBox_AirplaneList) {
+	public void generate_Receipt(Passenger[] passengers,AirlineType[] airplane, JComboBox comboBox_AirplaneList) {
 		
 		int selectedPlane = Integer.parseInt(comboBox_AirplaneList.getSelectedItem().toString());
 		
